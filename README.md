@@ -5,3 +5,7 @@
 + Linked Lists
 + Stacks
 + Queues
++ Binary Search Trees (BST)
++ Balanced Binary Search Trees (AVL)
++ Heap
++ Hashing
