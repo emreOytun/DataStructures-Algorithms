@@ -9,3 +9,4 @@
 + Balanced Binary Search Trees (AVL)
 + Heap
 + Hashing
++ Quicksort, Heapsort, MergeSort Algorithms
