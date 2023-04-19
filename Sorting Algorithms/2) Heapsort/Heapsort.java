@@ -3,7 +3,7 @@ public class Heapsort {
     // Heapsort:
     // 1) Turn the given array into a max or min heap. O(NlogN)
     // 2) Swap the top node with the bottom node everytime and heapify the new top node O(NlogN) 
-    public static <T extends Comparable> void sort(T[] arr) {
+    public static <T extends Comparable<T>> void sort(T[] arr) {
         Heapsort.createMaxHeapFromArray(arr);
         
         // O(NlogN)
@@ -18,7 +18,7 @@ public class Heapsort {
     // Turns the given array into a max-heap
     // 1) Find the last non-leaf node's index
     // 2) Heapify the nodes starting with the last non-leaf node's index to the root
-    private static <T extends Comparable> void createMaxHeapFromArray(T[] arr) {
+    private static <T extends Comparable<T>> void createMaxHeapFromArray(T[] arr) {
         int leafNodesNum = (int) Math.ceil((double)arr.length / 2);
         int nonLeafNodesNum = arr.length - leafNodesNum;
         int lastNonLeafNodeIndex = nonLeafNodesNum - 1;
@@ -31,7 +31,7 @@ public class Heapsort {
     }
 
     // Heapify the given node until max-heap conditions are met.
-    private static <T extends Comparable> void heapify(T[] arr, int len, int idx) {
+    private static <T extends Comparable<T>> void heapify(T[] arr, int len, int idx) {
         if (idx < 0 || idx >= arr.length) return;
 
         // Find the max index between 3 nodes (this node, left child, right child)

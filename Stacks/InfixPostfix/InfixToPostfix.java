@@ -141,7 +141,7 @@ public class InfixToPostfix {
     }
 
     public static void main(String[] args) {
-        String postfix = convertExpression("3 + 4 * 2");
+        String postfix = convertExpression("3 + ( 4 * 2 )");
         System.out.println(postfix);
         System.out.println("Postfix result: " + calculatePostfix(postfix));
     }

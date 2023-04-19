@@ -1,0 +1,334 @@
+import java.util.AbstractList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ListIterator;
+import java.util.NoSuchElementException;
+
+public class LDLinkedList<E> {
+
+    private static class Node<E> {
+        private E data;
+        private Node<E> next;
+        private Node<E> prev;
+        private boolean deleted;
+
+        public Node(E data) {
+            this(data, null, null);
+        } 
+
+        public Node(E data, Node<E> next, Node<E> previous) {
+            this.data = data;
+            this.next = next;
+            this.prev = prev;
+            this.deleted = false;
+        }
+    }
+
+
+    private Node<E> head;
+    private Node<E> tail;
+    private int size;
+    private int deletedNumber;
+
+    public LDLinkedList() {
+        head = null;
+        tail = null;
+        size = 0;
+        deletedNumber = 0;
+    }
+
+    public 
+
+
+    private class LDLinkedListIter<E> implements ListIterator<E> {
+        private Node<E> nextItem;
+        private Node<E> lastItemReturned;
+        private int index;
+        
+        public LDLinkedListIter(int index) throws IndexOutOfBoundsException {
+            // index can be equal to size meaning nextItem=null.
+            if (index < 0 || index > size) {
+                throw new IndexOutOfBoundsException();
+            }
+            
+            // Set lastItemReturned and index here.
+            this.lastItemReturned = null;
+            this.index = index;
+            
+            if (index == size) {
+                nextItem = null;
+            }
+
+            else if (index == size - 1) {
+                nextItem = tail;
+            }
+
+            else {
+                nextItem = head;
+                for (int i = 0; i < index + deletedNumber; ++i) {
+                    nextItem = nextItem.next;
+                }
+            }
+        }
+        
+        public boolean hasNext() {
+            return nextItem != null;
+        }
+
+        public E next() throws NoSuchElementException {
+            if (!hasNext()) {
+                throw new NoSuchElementException();
+            }
+
+            lastItemReturned = nextItem;
+            nextItem = nextItem.next;
+            ++index;
+            return lastItemReturned.data;
+        }
+
+        public boolean hasPrevious() {
+            return ((nextItem == null && size != 0) || nextItem.prev != null);
+        }
+
+        public E previous() {
+            if (!hasPrevious()) {
+                throw new NoSuchElementException();
+            }
+
+            if (nextItem == null) {
+                nextItem = tail;
+            }
+            else {
+                nextItem = nextItem.prev;
+            }
+            lastItemReturned = nextItem;
+            --index;
+            return lastItemReturned.data;
+        }
+
+        public int nextIndex() {
+            return index + 1;
+        }
+
+        public int previousIndex() {
+            return index - 1;    
+        }
+
+        public void add(E data) {
+            Node<E> newNode = new Node<>(data);
+            // If list is empty, and nextItem=null :
+            if (head == null) {
+                head = newNode;
+                tail = newNode;
+            }
+            // If it ll be added to head
+            else if (nextItem == head) {
+                newNode.next = head;
+                head.prev = newNode;
+                head = newNode;
+            }
+            // If it ll be added to tail
+            else if (nextItem == null) {
+                tail.next = newNode;
+                newNode.prev = tail;
+                tail = newNode;
+            }
+            else {
+                Node<E> prevNode = nextItem.prev;
+                prevNode.next = newNode;
+                newNode.prev = prevNode;
+                newNode.next = nextItem;
+                nextItem.prev = newNode;
+            }
+            ++index;
+            ++size;
+            lastItemReturned = null;
+        }
+
+        public void remove() {
+            // If next/previous methods have not been called, or if add/remove methods have been called before remove.
+            if (lastItemReturned == null) {
+                throw new IllegalStateException();
+            }
+
+            Node<E> prevNode = lastItemReturned.prev;
+            Node<E> nextNode = lastItemReturned.next;
+
+            if (prevNode == null) {
+                head = nextNode;
+            }
+            else {
+                prevNode.next = nextNode;
+            }
+
+            if (nextNode == null) {
+                tail = prevNode;
+            }
+            else {
+                nextNode.prev = prevNode;
+            }
+
+            // If nexItem and lastItemReturned point to the same node(after previous() method), then nextItem should proceed, and index should be same.
+            // Otherwise, index is decremented.
+            if (nextItem == lastItemReturned) {
+                nextItem = nextItem.next;
+            }
+            else {
+                --index;
+            }
+            --size;
+            lastItemReturned = null; // release the object
+        }
+
+        public void set(E obj) {
+            // If next/previous methods have not been called, or if add/remove methods have been called before remove.
+            if (lastItemReturned == null) {
+                throw new IllegalStateException();
+            }
+
+            lastItemReturned.data = obj;
+        }
+    }
+
+    public ListIterator<E> listIterator() {
+        return new LDLinkedListIter<>(0);
+    }
+
+    public int size() {
+        return size;
+    }
+
+    public boolean isEmpty() {
+        return size == 0;
+    }
+
+    public boolean contains(Object o) {
+       ListIterator<E> it = listIterator();
+       boolean isFound = false;
+       while (it.hasNext() && !isFound) {
+            if (it.next().equals(o)) {
+                isFound = true;
+            }
+       }
+       return isFound;
+    }
+
+    public Object[] toArray() {
+        Object[] arr = new Object[size];
+        ListIterator<E> it = new LDLinkedListIter<>(0);
+        
+        for (int i = 0; it.hasNext(); ++i) {
+            arr[i] = it.next();
+        }
+        return arr;
+    }
+
+    
+
+    /*
+    @Override
+    public Iterator<E> iterator() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'iterator'");
+    }
+
+    
+    @Override
+    public <T> T[] toArray(T[] a) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'toArray'");
+    }
+
+    @Override
+    public boolean add(E e) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'add'");
+    }
+
+    @Override
+    public boolean remove(Object o) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'remove'");
+    }
+
+    @Override
+    public boolean containsAll(Collection<?> c) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'containsAll'");
+    }
+
+    @Override
+    public boolean addAll(Collection<? extends E> c) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'addAll'");
+    }
+
+    @Override
+    public boolean addAll(int index, Collection<? extends E> c) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'addAll'");
+    }
+
+    @Override
+    public boolean removeAll(Collection<?> c) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'removeAll'");
+    }
+
+    @Override
+    public boolean retainAll(Collection<?> c) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'retainAll'");
+    }
+
+    @Override
+    public void clear() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'clear'");
+    }
+
+    @Override
+    public E get(int index) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'get'");
+    }
+
+    @Override
+    public E set(int index, E element) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'set'");
+    }
+
+    @Override
+    public void add(int index, E element) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'add'");
+    }
+
+    @Override
+    public E remove(int index) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'remove'");
+    }
+
+    @Override
+    public int indexOf(Object o) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'indexOf'");
+    }
+
+    @Override
+    public int lastIndexOf(Object o) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'lastIndexOf'");
+    }
+
+
+    @Override
+    public List<E> subList(int fromIndex, int toIndex) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'subList'");
+    } */
+
+}

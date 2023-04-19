@@ -2,12 +2,12 @@ import java.util.ArrayList;
 
 public class Mergesort {
 
-    public static <T extends Comparable> void sort(T[] arr) {
+    public static <T extends Comparable<T>> void sort(T[] arr) {
         mergeSort(arr, 0, arr.length-1);
     }
 
     // O(NlogN) = O(logN) for diving subarrays * O(N) for merging subarray each time 
-    private static <T extends Comparable> void mergeSort(T[] arr, int firstIdx, int lastIdx) {
+    private static <T extends Comparable<T>> void mergeSort(T[] arr, int firstIdx, int lastIdx) {
         // If there is 1 element then just return.
         if (firstIdx >= lastIdx) return;
         
@@ -21,7 +21,7 @@ public class Mergesort {
 
     // O(N) space
     // O(N) time (O(N) for merging + O(N) for copying into original array)
-    private static <T extends Comparable> void merge(T[] arr, int firstIdx, int midIdx, int lastIdx) {
+    private static <T extends Comparable<T>> void merge(T[] arr, int firstIdx, int midIdx, int lastIdx) {
         // Find the total length of two subarrays, create a new array with it.
         int totalLen = lastIdx - firstIdx + 1;
         ArrayList<T> mergedArr = new ArrayList<>(totalLen);
