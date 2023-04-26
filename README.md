@@ -5,8 +5,8 @@
 + Linked Lists
 + Stacks
 + Queues
-+ Binary Search Trees (BST)
++ Binary Search Trees (BST, Huffman Tree)
 + Balanced Binary Search Trees (AVL)
-+ Heap
-+ Hashing
++ Heap (Priority Queue)
++ Hashing (HashTableOpen, HashTableChaining, HashMap, HashSet, Algorithm Problems)
 + Quicksort, Heapsort, MergeSort Algorithms
