@@ -1,3 +1,6 @@
+import java.util.Iterator;
+import java.util.Stack;
+
 public class BST<E extends Comparable<E>> extends BinaryTree<E> implements SearchTree<E> {
 
     private E deleteReturned = null;
@@ -63,17 +66,22 @@ public class BST<E extends Comparable<E>> extends BinaryTree<E> implements Searc
         }
         else {
             deleteReturned = curNode.data;
-            if (curNode.left == null) return curNode.right;
-            if (curNode.right == null) return curNode.left;
-            if (curNode.left.right == null) {
-                curNode.data = curNode.left.data;
-                curNode.left = curNode.left.left;
-                return curNode;
-            }
-            E predecessorElement = findAndDeletePredecessor(curNode.left);
-            curNode.data = predecessorElement;
+            return deleteNode(curNode);
+        }
+    }
+
+    // Return the new subtree after deleting the curNode.
+    private Node<E> deleteNode(Node<E> curNode) {
+        if (curNode.left == null) return curNode.right;
+        if (curNode.right == null) return curNode.left;
+        if (curNode.left.right == null) {
+            curNode.data = curNode.left.data;
+            curNode.left = curNode.left.left;
             return curNode;
         }
+        E predecessorElement = findAndDeletePredecessor(curNode.left);
+        curNode.data = predecessorElement;
+        return curNode;
     }
 
     // To delete a node:
@@ -115,11 +123,73 @@ public class BST<E extends Comparable<E>> extends BinaryTree<E> implements Searc
         return root.data;
     }
 
+    public Iterator<E> iterator() {
+        return new BSTIterator();
+    }
+
+    private class BSTIterator implements Iterator<E> {
+        private Node<E> nextItem;
+        private Node<E> lastItemReturned = null;
+        private Stack<Node<E>> pathStack = new Stack<>();
+
+        public BSTIterator() {
+            if (root == null) nextItem = null;
+            else {
+                Node<E> curNode = root;
+                while (curNode.left != null) {
+                    pathStack.push(curNode);
+                    curNode = curNode.left;
+                }
+                nextItem = curNode;
+            }
+        }
+
+        public boolean hasNext() {
+            return nextItem != null;
+        }
+
+        // RECURSIVE FONKSIYONUMUZ 2 STATE'LI:
+        // 1) Ilk fonksiyon cagrisi yapildiginda sol tarafi check ederek olabildigince sola gidecek sekilde recursive cagrilari yap, kendini stack'e pushla.
+        // 2) next() methodu cagrildiginda state-1 atlanmis haldedir. Sag tarafin olup olmadigini check et, sag taraf varsa yeni bir fonksiyon cagrisi yapilacak ancak suanki fonksiyon stack'e bir daha pushlanmayacak.
+        public E next() {
+            if (!hasNext()) {
+                throw new RuntimeException();
+            }
+            lastItemReturned = nextItem;
+            if (nextItem.right != null) { // State-2: State-1 bitti, sag tarafi check et.
+                nextItem = nextItem.right; // Once diger fonksiyon icin nextItem.right'a git.
+                while (nextItem.left != null) { // Bu yeni fonksiyon sol tarafa ilerleyecekse ilerlet.
+                    pathStack.push(nextItem);
+                    nextItem = nextItem.left;
+                }
+            }
+            else { // State-2 Devami: State-2'den sonra baska bir stack olmadigindan bu fonksiyon bir daha stack'e pushlanmiyor. Stack'ten oncekini cek.
+                if (pathStack.isEmpty()) nextItem = null;
+                else nextItem = pathStack.pop();
+            }
+            return lastItemReturned.data; 
+        }
+
+        public void remove() {
+            if (lastItemReturned == null) {
+                throw new IllegalStateException();
+            }
+        }
+
+    }
+
     public static void main(String[] args) {
         BST<Integer> bst = new BST<>();
-        bst.add(3);
+        bst.add(10);
+        bst.add(15);
         bst.add(7);
+        bst.add(5);
         System.out.println(bst);
+    
+        Iterator<Integer> it = bst.iterator();
+        while (it.hasNext()) {
+            System.out.println(it.next());
+        }
     }
     
 }

@@ -1,5 +1,6 @@
 import java.util.AbstractQueue;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.Queue;
@@ -49,9 +50,9 @@ public class KWPriorityQueue<E> extends AbstractQueue<E> implements Queue<E> {
 
     private void heapifyUp(int index) {
         boolean isDone = false;
-        while (!isDone && index > 0) {
-            int parent = (int) Math.floor(index / 2);
-            if (compare(data.get(index), data.get(parent)) < 0) {
+        while (!isDone) {
+            int parent = (int) Math.floor((index-1) / 2);
+            if (parent >= 0 && compare(data.get(index), data.get(parent)) < 0) {
                 swap(index, parent);
                 index = parent;
             }
@@ -63,7 +64,7 @@ public class KWPriorityQueue<E> extends AbstractQueue<E> implements Queue<E> {
     
     private void heapifyDown(int index) {
         boolean isDone = false;
-        while (!isDone && index > data.size()-1) {
+        while (!isDone) {
             int child1 = 2*index + 1;
             int child2 = child1 + 1;
             int min_i = index;
@@ -96,5 +97,17 @@ public class KWPriorityQueue<E> extends AbstractQueue<E> implements Queue<E> {
             return comparator.compare(left, right);
         }
         return ((Comparable<E>)left).compareTo(right);
+    }
+
+    public static void main(String[] args) {
+        KWPriorityQueue<Integer> pq = new KWPriorityQueue<>();
+        pq.offer(3);
+        pq.offer(6);
+        pq.offer(2);
+        pq.offer(1);
+        pq.offer(7);
+        while (!pq.isEmpty()) {
+            System.out.println(pq.peek());
+        }
     }
 }

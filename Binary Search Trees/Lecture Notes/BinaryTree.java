@@ -1,4 +1,6 @@
+import java.util.LinkedList;
 import java.util.Scanner;
+
 
 public class BinaryTree<E> {
     
@@ -37,6 +39,10 @@ public class BinaryTree<E> {
         size = 1;
         if (leftTree != null) size += leftTree.size;
         if (rigthTree != null) size += rigthTree.size;
+    }
+
+    public E getData() {
+        return root.data;
     }
 
     public BinaryTree<E> getLeftSubtree() {
@@ -82,7 +88,7 @@ public class BinaryTree<E> {
         return stringBuilder.toString();
     }
 
-    private void preOrderTraverse(Node<E> node, int depth, StringBuilder sb) {
+    public void preOrderTraverse(Node<E> node, int depth, StringBuilder sb) {
         for (int i = 1; i < depth; ++i) {
             sb.append(" ");
         }
@@ -97,6 +103,20 @@ public class BinaryTree<E> {
         }
     }
 
+    // Traverse the tree level-by-level each time printing one level and continuing to the next level.
+    public void breadthFirstTraverse() {
+        // Use LinkedList as Queue
+        LinkedList<Node<E>> list = new LinkedList<>();
+        list.addFirst(root);
+        while (!list.isEmpty()) {
+            Node<E> curNode = list.getFirst();
+            System.out.println(curNode);
+            list.addLast(root.left);  // Add left and right children to the queue
+            list.addLast(root.right);
+            list.removeFirst();
+        }
+    }
+
     public static BinaryTree<String> readBinaryTree(Scanner scan) {
         String data = scan.next();
         data = data.trim();
@@ -107,4 +127,5 @@ public class BinaryTree<E> {
         BinaryTree<String> right = readBinaryTree(scan);
         return new BinaryTree<String>(data, left, right);
     }
+
 }
