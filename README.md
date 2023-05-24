@@ -1,5 +1,5 @@
-# Data Structures and Algorithms Implementations
-+ Includes my Data Structures and Algorithms works.
+# Data Structures And Algorithms 
++ This repository includes my data structures and algorithms implementation and works.
 
 # Added Data Structures : 
 + Arrays
