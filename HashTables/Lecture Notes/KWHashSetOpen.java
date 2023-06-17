@@ -55,7 +55,7 @@ public class KWHashSetOpen<E> extends AbstractSet<E> implements Set<E> {
         }
 
         public boolean hasNext() {
-            return nextIndex < table.length;
+            return nextIndex < numKeys;
         }
 
         public E next() {

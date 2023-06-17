@@ -50,13 +50,13 @@ public class KWHashMapOpen<K, V> extends AbstractMap<K, V> implements Map<K, V> 
 
         int index = find(key);
         if (table[index] == null) {
+            table[index] = new SimpleEntry<K,V>(key, value);
+            ++numKeys;
+            
             double loadFactor = (numKeys + numDeletes) / table.length;
             if (loadFactor >= LOAD_THRESHOLD) {
                 rehash();
             }
-        
-            table[index] = new SimpleEntry(key, value);
-            ++numKeys;
             return null;
         }
         V oldVal = table[index].getValue();
@@ -78,8 +78,8 @@ public class KWHashMapOpen<K, V> extends AbstractMap<K, V> implements Map<K, V> 
 
     private void rehash() {
         Entry<K,V>[] oldTable = table;
-        Entry<K,V>[] table = new SimpleEntry[2 * oldTable.length + 1];
-        numKeys = 0;
+        Entry<K,V>[] table = new SimpleEntry[2 * oldTable.length + 1]; // Set this table as a new table.
+        numKeys = 0; // Clear the numbers.
         numDeletes = 0;
 
         for (int i = 0; i < oldTable.length; ++i) {

@@ -54,4 +54,25 @@ public class DepthFirstSearch {
         finishOrder[finishIndex++] = current; // Just before the recursive call for the current vertex/node is finished, put it into the finishOrder.
         finished.add(current); // Add current node to the finished set // USED FOR CYCLE DETECTION
     }
+
+    public int[] topologicalOrder() {
+        reverseArray(finishOrder);
+        return finishOrder;
+    }
+
+    // O(N/2) = O(N)
+    private static void reverseArray(int[] array) {
+        int start = 0;
+        int end = array.length-1;
+
+        while (start < end) {
+            int temp = array[start];
+            array[start] = array[end];
+            array[end] = temp;
+
+            ++start;
+            --end;
+        }
+    }
+    
 }

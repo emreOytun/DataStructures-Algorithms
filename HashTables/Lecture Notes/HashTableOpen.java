@@ -26,7 +26,7 @@ public class HashTableOpen<K, V> {
     private Entry<K,V>[] table = new Entry[START_CAPACITY];
     private int numKeys = 0;
     private int numDeletes = 0;
-    private final Entry<K,V> DELETED = new Entry<K,V>(null, null); // Silinecek olan elemanlari DELETED referansiyla isaretliyoruz. Rehash'lerken silinmis oluyor.
+    private final Entry<K,V> DELETED = new Entry<>(null, null); // Silinecek olan elemanlari DELETED referansiyla isaretliyoruz. Rehash'lerken silinmis oluyor.
 
 
     // Precondition: Table is not full. This conditions holds because we use load factor, table is always empty.
@@ -53,13 +53,13 @@ public class HashTableOpen<K, V> {
 
         int index = find(key);
         if (table[index] == null) {
+            table[index] = new Entry<K,V>(key, value);
+            ++numKeys;
+            
             double loadFactor = (numKeys + numDeletes) / table.length;
             if (loadFactor >= LOAD_THRESHOLD) {
                 rehash();
             }
-        
-            table[index] = new Entry<K,V>(key, value);
-            ++numKeys;
             return null;
         }
         V oldVal = table[index].value;
@@ -68,6 +68,8 @@ public class HashTableOpen<K, V> {
     }
 
     public V remove(Object key) {
+        if (key == null) return null;
+
         int index = find(key);
         if (table[index] == null) return null;
         V oldValue = table[index].value;

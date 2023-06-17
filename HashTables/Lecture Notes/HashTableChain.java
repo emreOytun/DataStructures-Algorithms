@@ -61,13 +61,15 @@ public class HashTableChain<K, V> {
             }
         }
 
+        // Yeni entry olusturup ekle ve size'i arttir.
+        Entry<K,V> newItem = new Entry<K,V>(key, value);
+        table[index].addFirst(newItem);
+        ++size;
+
         // Yeni bir slot eklencekse load factor'u kontrol et.
         if (size >= LOAD_THRESHOLD * table.length) {
             rehash();
         }
-        Entry<K,V> newItem = new Entry<K,V>(key, value);
-        table[index].addFirst(newItem);
-        ++size;
         return null;
     }
 
