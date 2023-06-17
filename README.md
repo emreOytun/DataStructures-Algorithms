@@ -11,10 +11,15 @@
 + B-Tree
 + Heap (Priority Queue)
 ***
-+ Hashing (HashTableOpen, HashTableChaining, HashMap, HashSet, Algorithm Problems)
++ Hash Table
++ HashTableOpen (Open addressing with linear probing)
++ HashTableChaining (Chaining)
++ HashMap
++ HashSet
++ Algorithm Problems using Maps and Sets
 ***
-+ Quadratic Sort Algorithms - Insertion sort, Bubble Sort, Selection Sort, Shell Sort
-+ Quicksort, Heapsort, MergeSort Algorithms
++ Quadratic Sort Algorithms: Insertion sort, Bubble Sort, Selection Sort, Shell Sort
++ Quicksort, Heapsort, MergeSort
 ***
 + Graphs and Graph Algorithms
 + Breadth-First Search, Depth-First Search
